@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ShowTask from "./components/ShowTask.jsx";
 import  CreateTask  from "./components/CreateTask.jsx";
-import UpdateTask from "./components/UpdateTAsk.jsx";
+import UpdateTask from "./components/UpdateTask.jsx";
 
 
 const App = () => {
