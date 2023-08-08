@@ -1,20 +1,25 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
 import { Link, Outlet } from "react-router-dom";
-import UpdateTask from "./UpdateTAsk";
+import UpdateTask from "./UpdateTask.jsx";
 
 
-const TaskCard = ({ data,handleEdit, handleDelete }) => {
+const TaskCard = ({ data, handleDelete }) => {
     const { _id, title} = data;
 
+    const [isChecked, setIsChecked] = useState(false);
+
+    const handleCheckboxChange = () => {
+        setIsChecked(!isChecked);
+    };
     return (
-        <li className="flex flex-row  py-4 border-4" key = {_id}>
+        <li className="flex flex-row  py-4 border-4 ${isChecked ? 'line-through' : ''}" key = {_id}>
             <div className="text-xl font-semibold w-32">
-                <h3>{title}</h3>
+                <h3 style={{ textDecoration: isChecked ? 'line-through' : 'none' }}>{title}</h3>
             </div>
             <div className="flex flex-row justify-end gap-10 pl-10 w-32 ">
-                <button name={_id} onClick={handleEdit}><i class="fa-solid fa-pencil"></i></button>
-                <button name={_id} onClick={handleDelete}><i class="fa-solid fa-trash"></i></button>
+                <button type="checkbox"  onClick={handleCheckboxChange}><i class="fa-solid fa-check"></i></button>
+                <button data-id={_id} onClick={handleDelete}><i class="fa-solid fa-trash"></i></button>
             </div>
         </li>
     )
@@ -23,41 +28,26 @@ const TaskCard = ({ data,handleEdit, handleDelete }) => {
 const ShowTask = () => {
 
     const [task,setTask] = useState([])  
-    const [open, setOpen] = useState(false)  
-    const [id, setId] = useState("")
-    const [update, setUpdate] = useState(false)
+   
 
     useEffect( () => {
         axios
-        .get("https://backendd-m98p.onrender.com/api/task/")
+        .get("https://backend-todo-2n2o.onrender.com/api/task")
         .then((res) => {
             setTask(res.data)
         })
         .catch((err) => {
             console.log(err);
         })
-    },[update])
+    },[])
 
-    function handleEdit(e) {
-        setId(e.target.name)
-        setOpen(true)
-    }
 
-    function handleUpdate() { 
-        console.log("update:", update, !update);
-        setUpdate(!update);
-    }
-
-    function handleClose() { 
-        setId("");
-        setOpen(false);
-    }
-
-    function handleDelete(e) {
-        axios.delete(`https://backendd-m98p.onrender.com/api/task/${e.target.name}`);
+    function handleDelete(e) { 
+        const taskId = e.currentTarget.dataset.id
+        axios.delete(`https://backend-todo-2n2o.onrender.com/api/task/${taskId}`);
 
         setTask((data) => {
-            return data.filter((todo) => todo._id !== e.target.name);
+            return data.filter((task) => task._id !== taskId);
         });
     }
 
@@ -69,23 +59,9 @@ const ShowTask = () => {
         <section className="py-4" >
                 <h1 className="text-3xl p-10 font-bold px-20" >Task List</h1>
                 <ul >
-                    {task.map((data) => <TaskCard key={data._id} data={data} handleEdit={handleEdit} handleDelete={handleDelete} />)}
+                    {task.map((data) => <TaskCard key={data._id} data={data}  handleDelete={handleDelete} />)}
                 </ul>
             </section>
-            {open ? (
-                <section >
-                    <div className=" pt-6 pb-10 bg-orange-400 rounded-lg" >
-                        <p className="pb-3" onClick={handleClose}><i class="fa-solid fa-xmark"></i></p>
-                        <UpdateTask
-                            _id={id}
-                            handleClose={handleClose}
-                            handleUpdate={handleUpdate}
-                        />
-                    </div>
-                </section>
-            ) : (
-                ""
-            )}
     </div>
   )
 }

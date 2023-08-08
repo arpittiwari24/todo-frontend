@@ -18,9 +18,8 @@ const CreateTask = () => {
                             title: data.title,
                         };
                     
-                        console.log({ task });
                         axios
-                            .post("https://backendd-m98p.onrender.com/api/task/", data)
+                            .post("https://backend-todo-2n2o.onrender.com/api/task", task)
                             .then((res) => {
                                 setData({ title: "" });
                                 console.log(res.data.message);
