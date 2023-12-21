@@ -51,13 +51,19 @@ const ShowTask = () => {
         });
     }
 
+    const date = new Date()
+
+    const today = date.toLocaleString()
+
   return (
     <div className="">
         <h1 className=" max-sm:text-4xl text-5xl py-10 font-bold px-10" >TODO APP</h1>
         <Link to = "/create-task"><button className="border-2 border-solid bg-blue-500 w-20 h-10 rounded-lg text-xl font-semibold">New</button></Link>
+        <h2 className="text-2xl py-2 font-bold" >{today}</h2>
         <Outlet />
         <section className="py-4" >
-                <h1 className="text-3xl p-10 font-bold px-20" >Task List</h1>
+                <h1 className="text-3xl p-10 font-bold px-20 underline" >Task List</h1>
+                
                 <ul >
                     {task.map((data) => <TaskCard key={data._id} data={data}  handleDelete={handleDelete} />)}
                 </ul>

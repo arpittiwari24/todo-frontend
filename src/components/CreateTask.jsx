@@ -8,7 +8,7 @@ const CreateTask = () => {
     const [data, setData] = useState({ title: ""});
 
     return (
-        <div>
+        <div className="">
                 <form
                     className="flex flex-row gap-4 py-8"
                     onSubmit={(e) => {
