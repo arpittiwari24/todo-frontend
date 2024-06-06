@@ -5,7 +5,7 @@ import { Link, Outlet } from "react-router-dom";
 
 
 const TaskCard = ({ data, handleDelete }) => {
-    const { _id, title} = data;
+    const { _id, title } = data;
 
     const [isChecked, setIsChecked] = useState(false);
 
@@ -13,13 +13,13 @@ const TaskCard = ({ data, handleDelete }) => {
         setIsChecked(!isChecked);
     };
     return (
-        <li className="flex flex-row  py-4 border-4 ${isChecked ? 'line-through' : ''}" key = {_id}>
-            <div className="text-xl font-semibold w-32">
+        <li className="flex flex-row items-center justify-center w-full px-2  py-2 border-2 ${isChecked ? 'line-through' : ''}" key={_id}>
+            <div className="text-xl max-sm:text-sm font-semibold flex-1">
                 <h3 style={{ textDecoration: isChecked ? 'line-through' : 'none' }}>{title}</h3>
             </div>
-            <div className="flex flex-row justify-end gap-10 pl-10 w-32 ">
-                <button type="checkbox"  onClick={handleCheckboxChange}><i class="fa-solid fa-check"></i></button>
-                <button data-id={_id} onClick={handleDelete}><i class="fa-solid fa-trash"></i></button>
+            <div className="flex flex-row items-center justify-end gap-10 pl-10 w-32 ">
+                <button type="checkbox" onClick={handleCheckboxChange}><i className="fa-solid fa-check"></i></button>
+                <button data-id={_id} onClick={handleDelete}><i className="fa-solid fa-trash"></i></button>
             </div>
         </li>
     )
@@ -27,22 +27,22 @@ const TaskCard = ({ data, handleDelete }) => {
 
 const ShowTask = () => {
 
-    const [task,setTask] = useState([])  
-   
+    const [task, setTask] = useState([])
 
-    useEffect( () => {
+
+    useEffect(() => {
         axios
-        .get("https://backend-todo-2n2o.onrender.com/api/task")
-        .then((res) => {
-            setTask(res.data)
-        })
-        .catch((err) => {
-            console.log(err);
-        })
-    },[])
+            .get("https://backend-todo-2n2o.onrender.com/api/task")
+            .then((res) => {
+                setTask(res.data)
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+    }, [])
 
 
-    function handleDelete(e) { 
+    function handleDelete(e) {
         const taskId = e.currentTarget.dataset.id
         axios.delete(`https://backend-todo-2n2o.onrender.com/api/task/${taskId}`);
 
@@ -51,25 +51,19 @@ const ShowTask = () => {
         });
     }
 
-    const date = new Date()
 
-    const today = date.toLocaleString()
-
-  return (
-    <div className="">
-        <h1 className=" max-sm:text-4xl text-5xl py-10 font-bold px-10" >TODO APP</h1>
-        <Link to = "/create-task"><button className="border-2 border-solid bg-blue-500 w-20 h-10 rounded-lg text-xl font-semibold">New</button></Link>
-        <h2 className="text-2xl py-2 font-bold" >{today}</h2>
-        <Outlet />
-        <section className="py-4" >
-                <h1 className="text-3xl p-10 font-bold px-20 underline" >Task List</h1>
-                
-                <ul >
-                    {task.map((data) => <TaskCard key={data._id} data={data}  handleDelete={handleDelete} />)}
+    return (
+        <div className="flex flex-col items-center justify-center">
+            <h1 className=" max-sm:text-4xl text-5xl py-10 font-bold" >TODO APP</h1>
+            <Link to="/create-task"><button className=" fixed bottom-4 right-0 border-2 border-solid bg-blue-500 px-4 py-2 rounded-full text-2xl font-semibold">+</button></Link>
+            <Outlet />
+            <section className="py-4" >
+                <ul className="w-full">
+                    {task.map((data) => <TaskCard key={data._id} data={data} handleDelete={handleDelete} />)}
                 </ul>
             </section>
-    </div>
-  )
+        </div>
+    )
 }
 
 export default ShowTask
